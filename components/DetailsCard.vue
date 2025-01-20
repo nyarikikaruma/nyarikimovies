@@ -91,7 +91,7 @@
                     </v-card-text>
                 </v-card>
 
-                <v-card>
+                <v-card class="h-50 overflow-auto">
                     <v-card-title class="text-h6">Reviews</v-card-title>
                     <v-card-text>
                         <v-timeline side="end">
@@ -164,7 +164,7 @@ const reviews = [
         name: 'Robert Johnson',
         rating: 5,
         date: '2 days ago',
-        avatar: 'https://placekitten.com/40/40',
+        avatar: 'https://img.freepik.com/free-photo/portrait-expressive-young-man-wearing-formal-suit_273609-6942.jpg',
         comment: 'A powerful message of faith and hope. This movie touched my heart deeply.'
     },
     {
@@ -172,7 +172,31 @@ const reviews = [
         name: 'Lisa Chen',
         rating: 4,
         date: '5 days ago',
-        avatar: 'https://placekitten.com/41/41',
+        avatar: 'https://img.freepik.com/free-photo/portrait-expressive-young-man-wearing-formal-suit_273609-6942.jpg',
+        comment: 'Beautiful storytelling with meaningful lessons about trust in God.'
+    },
+    {
+        id: 3,
+        name: 'Lisa Chen',
+        rating: 2,
+        date: '5 days ago',
+        avatar: 'https://img.freepik.com/free-photo/portrait-expressive-young-man-wearing-formal-suit_273609-6942.jpg',
+        comment: 'Beautiful storytelling with meaningful lessons about trust in God.'
+    },
+    {
+        id: 4,
+        name: 'Lisa Chen',
+        rating: 4,
+        date: '5 days ago',
+        avatar: 'https://img.freepik.com/free-photo/portrait-expressive-young-man-wearing-formal-suit_273609-6942.jpg',
+        comment: 'Beautiful storytelling with meaningful lessons about trust in God.'
+    },
+    {
+        id: 5,
+        name: 'Lisa Chen',
+        rating: 5,
+        date: '8 days ago',
+        avatar: 'https://img.freepik.com/free-photo/portrait-expressive-young-man-wearing-formal-suit_273609-6942.jpg',
         comment: 'Beautiful storytelling with meaningful lessons about trust in God.'
     }
 ];
