@@ -28,6 +28,7 @@
     </v-card>
 </template>
 <script setup lang="ts">
+const { $auth } = useNuxtApp()
 const loading = ref(false)
 const form = reactive({
     email: '',
@@ -88,8 +89,10 @@ const handleRegister = async () => {
 
     try {
         loading.value = true
-        // Add your registration logic here
-        console.log('Registration form:', form)
+        const registered = await $auth.signUp(form.email, form.password)
+        if (registered) {
+            navigateTo('/home')
+        }
 
         // Example navigation after successful registration
         // await navigateTo('/login')

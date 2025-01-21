@@ -27,6 +27,7 @@
     </div>
 </template>
 <script setup lang="ts">
+const auth = useAuthState()
 const loading = ref(false)
 const form = reactive({
     email: '',
@@ -75,11 +76,11 @@ const handleLogin = async () => {
 
     try {
         loading.value = true
-        // Add your login logic here
-        console.log('Login form:', form)
-
-        // Example navigation after successful login
-        // await navigateTo('/dashboard')
+        const login = await auth.signIn(form.email, form.password)
+        console.log('login', login)
+        if (login) {
+            navigateTo('/home')
+        }
     } catch (error) {
         console.error('Login error:', error)
     } finally {

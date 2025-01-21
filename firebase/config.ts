@@ -1,17 +1,17 @@
-// firebase/config.ts
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
-const runtimeConfig = useRuntimeConfig()
 
-
-const firebaseConfig = {
-    firebaseApiKey: runtimeConfig.public.firebaseApiKey,
-    firebaseAuthDomain: runtimeConfig.public.firebaseAuthDomain,
-    firebaseProjectId: runtimeConfig.public.firebaseProjectId,
-    firebaseStorageBucket: runtimeConfig.public.firebaseStorageBucket,
-    firebaseMessagingSenderId: runtimeConfig.public.firebaseMessagingSenderId,
-    firebaseAppId: runtimeConfig.public.firebaseAppId
+export const createFirebaseApp = (config: any) => {
+    const firebaseConfig = {
+        apiKey: config.firebaseApiKey,
+        authDomain: config.firebaseAuthDomain,
+        projectId: config.firebaseProjectId,
+        storageBucket: config.firebaseStorageBucket,
+        messagingSenderId: config.firebaseMessagingSenderId,
+        appId: config.firebaseAppId
+    }
+    
+    const app = initializeApp(firebaseConfig)
+    const auth = getAuth(app)
+    return { app, auth }
 }
-console.log('apiKey', firebaseConfig.apiKey)
-export const firebaseApp = initializeApp(firebaseConfig)
-export const auth = getAuth(firebaseApp)

@@ -1,15 +1,13 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-    const { isAuthenticated } = useAuth()
-    
-    console.log('isAuthenticated', isAuthenticated)
-    
-    const publicRoutes = ['/login', '/register']
-    
-    if (!isAuthenticated.value && !publicRoutes.includes(to.path)) {
-      return navigateTo('/login')
+export default defineNuxtRouteMiddleware((to) => {
+    const auth = useAuthState(); 
+    const userValue = auth.user.value
+    console.log('auth', auth.user.value)
+    console.log('userValue', userValue)
+    if (!auth.isAuthenticated.value && !['/login', '/register'].includes(to.path)) {
+        return navigateTo('/login');
     }
-    
-    if (isAuthenticated.value && publicRoutes.includes(to.path)) {
-      return navigateTo('/')
+
+    if (auth.isAuthenticated.value && ['/login', '/register'].includes(to.path)) {
+        return navigateTo('/home');
     }
-  })
+});
