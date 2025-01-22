@@ -19,6 +19,11 @@
 </template>
 
 <script setup lang="ts">
+const authToken = useCookie('auth-token')
+
+onMounted(() => {
+    console.log('authToken home', authToken.value)
+}) 
 </script>
 
 <style scoped>

@@ -1,12 +1,9 @@
 <template>
     <div>
-        <!-- Toolbar -->
         <v-toolbar extended style="background-color: #282654;">
             <v-row class="align-center">
-                <!-- Left spacer -->
                 <v-col cols="1" class="d-none d-md-flex" style="background-color: #282654;"></v-col>
 
-                <!-- Toolbar content -->
                 <v-col cols="10" class="d-flex align-center">
                     <NuxtLink to="/home" class="d-flex align-center text-decoration-none">
                         <v-icon class="text-white mr-4" size="x-large">mdi-movie-open</v-icon>
@@ -26,29 +23,24 @@
 
                         <v-list class="ma-0 pa-0">
                             <v-list-item class="ma-0">
-                                <v-btn class="ma-0 pa-0">Log out</v-btn>
+                                <v-btn @click="logout()" class="ma-0 pa-0">Log out</v-btn>
                             </v-list-item>
                         </v-list>
                     </v-menu>
                 </v-col>
 
-                <!-- Right spacer -->
                 <v-col cols="1" class="d-none d-md-flex" style="background-color: #282654;"></v-col>
             </v-row>
         </v-toolbar>
 
-        <!-- Main content -->
         <v-container fluid class="pa-0">
             <v-row>
-                <!-- Left spacer -->
                 <v-col cols="1" class="d-none d-md-flex" style="background-color: #282654;"></v-col>
 
-                <!-- Main content area -->
                 <v-col cols="10">
                     <slot></slot>
                 </v-col>
 
-                <!-- Right spacer -->
                 <v-col cols="1" class="d-none d-md-flex" style="background-color: #282654;"></v-col>
             </v-row>
         </v-container>
@@ -56,22 +48,31 @@
 </template>
 
 <script setup lang="ts">
+const authToken = useCookie('auth-token')
+
 const loading = false;
 
 function onClick() {
     console.log("Search clicked");
 }
+function logout() {
+    console.log('authtoken', authToken)
+    authToken.value = null
+    navigateTo('/login')
+}
+
+onMounted(() => {
+    console.log('authToke', authToken)
+}) 
 </script>
 
 <style>
 .v-toolbar {
     padding: 0;
-    /* Remove default padding */
 }
 
 .v-toolbar-title {
     font-size: 1.5rem;
-    /* Adjust title size */
 }
 
 .v-icon {
@@ -80,6 +81,5 @@ function onClick() {
 
 .v-text-field {
     max-width: 300px;
-    /* Limit width for better alignment */
 }
 </style>

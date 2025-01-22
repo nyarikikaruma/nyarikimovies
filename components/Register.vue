@@ -68,7 +68,6 @@ const validateForm = () => {
         isValid = false
     }
 
-    // Confirm password validation
     if (!form.confirmPassword) {
         errors.confirmPassword = 'Please confirm your password'
         isValid = false
@@ -93,9 +92,6 @@ const handleRegister = async () => {
         if (registered) {
             navigateTo('/home')
         }
-
-        // Example navigation after successful registration
-        // await navigateTo('/login')
     } catch (error) {
         console.error('Registration error:', error)
     } finally {
