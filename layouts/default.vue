@@ -56,7 +56,6 @@ function onClick() {
     console.log("Search clicked");
 }
 function logout() {
-    console.log('authtoken', authToken)
     authToken.value = null
     navigateTo('/login')
 }
