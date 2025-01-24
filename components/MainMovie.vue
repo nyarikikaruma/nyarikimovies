@@ -1,6 +1,6 @@
 <template>
     <div class="movie-banner">
-        <v-img :src="movie.bannerImage" height="600" cover class="movie-banner__image">
+        <v-img :src="`https://image.tmdb.org/t/p/original/${mainMovie.poster_path}`" height="600" cover class="movie-banner__image">
             <!-- Gradient overlay -->
             <div class="movie-banner__overlay"></div>
 
@@ -13,20 +13,20 @@
                             <v-chip color="error" class="mr-2">NOW SHOWING</v-chip>
                             <v-chip variant="outlined" color="white">
                                 <v-icon start icon="mdi-clock-outline"></v-icon>
-                                180 min
+                                {{ mainMovie.popularity }}
                             </v-chip>
                         </div>
 
                         <!-- Title and Rating -->
                         <h1 class="text-h2 font-weight-bold mb-4 text-white">
-                            {{ movie.title }}
+                            {{ mainMovie.title }}
                         </h1>
-                        <v-rating v-model="rating" color="amber" half-increments hover size="small"
+                        <v-rating v-model="mainMovie.vote_average" color="amber" half-increments hover size="small"
                             class="mb-4"></v-rating>
 
                         <!-- Description -->
                         <p class="text-white text-body-1 mb-6 movie-banner__description">
-                            {{ movie.description }}
+                            {{ mainMovie.overview }}
                         </p>
 
                         <!-- Action Buttons -->
@@ -46,14 +46,23 @@
     </div>
 </template>
 
-<script setup>
-const rating = ref(4.5)
-
-const movie = ref({
-    title: 'The Lion King: Mufasa and His Brothers',
-    bannerImage: 'https://img.freepik.com/free-photo/lion-lying-ground-sunlight-with-blurry-surface_181624-48519.jpg',
-    description: 'Experience the epic tale of Mufasa and his brothers in this groundbreaking new chapter of The Lion King saga. Journey through the African savanna in a story of family, legacy, and the circle of life.',
+<script setup lang="ts">
+import type { MovieData } from "~/utils/moviesList";
+const props = defineProps({
+    movies: {
+        type: Object,
+        required: true,
+    }
 })
+const { movies } = props as { movies: MovieData }
+onMounted(() => {
+    mainMovie
+})
+
+const mainMovie = computed(() => {
+    return movies.results[0]
+}) 
+
 </script>
 
 <style scoped>

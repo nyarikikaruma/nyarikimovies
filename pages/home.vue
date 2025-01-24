@@ -10,37 +10,46 @@
             type="image, article"
           ></v-skeleton-loader>
         </v-col>
+        <v-col cols="12" md="3">
+          <v-skeleton-loader
+            class="mx-auto border"
+            max-width="300"
+            type="image, article"
+          ></v-skeleton-loader>
+        </v-col>
       </v-row>
     </div>
     <div v-else>
-    <MainMovie :movieData="movies" />
-    </div>
-    <div>
-      <v-row align="center" justify="center">
-        <v-col>
-          <h1 style="color: #282654" class="text-h4 font-weight-bold mt-4">
-            Trending Movies
-          </h1>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col v-for="n in 12" :key="n" cols="12" sm="6" md="4" lg="3">
-          <MovieCard />
-        </v-col>
-      </v-row>
+        <div v-if="movies">
+            <MainMovie  :movies="movies" />    
+            <div>
+              <v-row align="center" justify="center">
+                <v-col>
+                  <h1 style="color: #282654" class="text-h4 font-weight-bold mt-4">
+                    Now Playing
+                  </h1>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col v-for="(movie, index) in movies?.results" :key="index" cols="12" sm="6" md="4" lg="3">
+                  <MovieCard :movie="movie" />
+                </v-col>
+              </v-row>
+            </div>
+        </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { MovieData } from "~/utils/moviesList";
+import type { MovieData } from "~/utils/moviesList";
 const config = useRuntimeConfig();
 const token = config.public.tmdbToken;
 var movies = ref<MovieData>();
 const loading = ref<Boolean>(false)
 
 onMounted(async () => {
-  // const { data, error } = await useAuthFetch('/authentication');
+    await getMovies()
 });
 
 async function getMovies() {

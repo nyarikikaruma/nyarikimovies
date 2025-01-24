@@ -1,17 +1,17 @@
 <template>
     <v-card class="mx-auto" max-width="344">
         <!-- Movie Poster with Rating Overlay -->
-        <v-img height="200px" src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" cover class="position-relative">
+        <v-img height="200px" :src="`https://image.tmdb.org/t/p/original/${movie.poster_path}`" cover class="position-relative">
             <v-chip color="white" text-color="yellow" class="position-absolute font-weight-bold ma-2"
                 style="right: 0; opacity: 0.9;">
-                8.5/10
+                {{ movie.vote_average }}/10
             </v-chip>
         </v-img>
 
         <!-- Movie Title and Genres -->
         <v-card-title class="text-h6 font-weight-bold">
-            The Jungle Book
-            <div class="text-subtitle-2 text-grey">Adventure, Family, Fantasy</div>
+            {{movie.title}}
+            <div class="text-subtitle-2 text-grey">{{ movie.original_title }}</div>
         </v-card-title>
 
         <!-- Movie Stats -->
@@ -19,26 +19,24 @@
             <v-row align="center" class="mx-0 py-2">
                 <v-col cols="auto" class="pa-1">
                     <v-icon color="yellow-darken-2" size="small">mdi-star</v-icon>
-                    <span class="ml-1">12K</span>
+                    <span class="ml-1">{{ movie.vote_count }}</span>
                 </v-col>
                 <v-divider vertical class="mx-2"></v-divider>
                 <v-col cols="auto" class="pa-1">
                     <v-icon size="small">mdi-clock-outline</v-icon>
-                    <span class="ml-1">106min</span>
+                    <span class="ml-1">{{movie.popularity}}</span>
                 </v-col>
                 <v-divider vertical class="mx-2"></v-divider>
                 <v-col cols="auto" class="pa-1">
                     <v-icon size="small">mdi-calendar</v-icon>
-                    <span class="ml-1">2012</span>
+                    <span class="ml-1">{{movie.release_date}}</span>
                 </v-col>
             </v-row>
         </v-card-subtitle>
 
         <!-- Movie Description -->
         <v-card-text >
-            An orphan boy is raised in the jungle with the help of a pack of wolves, a bear, and a black panther.
-            This live-action adaptation of Rudyard Kipling's classic brings the jungle to life with stunning
-            visuals and memorable characters.
+            {{movie.overview}}
         </v-card-text>
 
         <!-- Action Buttons -->
@@ -55,8 +53,18 @@
 </template>
 
 <script setup lang="ts">
-// You can add component logic here if needed
+import type { Movie } from "~/utils/moviesList";
+const props = defineProps({
+    movie: {
+        type: Object,
+        required: true,
+    }
+})
+const { movie } = props as { movie: Movie }
+
+
 </script>
+
 
 <style scoped>
 /* Add any custom styles here if needed */
