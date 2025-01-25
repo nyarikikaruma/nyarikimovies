@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button @click="getMovies()">Fetch data:</button>
     <div v-if="loading">
       <v-row>
         <v-col cols="12" md="12">
@@ -71,6 +70,8 @@ async function getMovies() {
     console.log("error", error);
   }
 }
+
+
 </script>
 
 <style scoped>
