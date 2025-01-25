@@ -49,18 +49,18 @@
 <script setup lang="ts">
 import type { MovieData } from "~/utils/moviesList";
 const props = defineProps({
-    movies: {
+    nowPlaying: {
         type: Object,
         required: true,
     }
 })
-const { movies } = props as { movies: MovieData }
+const { nowPlaying } = props as { nowPlaying: MovieData }
 onMounted(() => {
     mainMovie
 })
 
 const mainMovie = computed(() => {
-    return movies.results[0]
+    return nowPlaying.results[0]
 }) 
 
 </script>
