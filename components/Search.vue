@@ -11,6 +11,7 @@
         single-line
         clearable
         @update:model-value="handleSearch"
+
         @click:clear="clearSearch"
         class="mr-5"
       >
