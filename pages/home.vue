@@ -16,10 +16,13 @@
                 <MainMovie :nowPlaying="nowPlaying" />
                 <div>
                     <v-row align="center" justify="center">
-                        <v-col>
+                        <v-col cols="12" md="6">
                             <h1 style="color: #282654" class="text-h4 font-weight-bold mt-4">
                                 Now Playing
                             </h1>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-pagination :length="nowPlaying.total_pages" @update:model-value="goToNextPage('now_playing', nowPlaying.page.toString())" :total-visible="5"></v-pagination>
                         </v-col>
                     </v-row>
                     <v-sheet>
@@ -109,6 +112,9 @@ onMounted(async () => {
     await getMovies()
 });
 
+function goToNextPage(type:String, page:String) {
+    console.log('fetch movies for: ', type, page)
+}
 async function getMovies() {
     try {
         loading.value = true

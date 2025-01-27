@@ -1,56 +1,44 @@
 <template>
-    <div>
+    <div class="layout-container">
         <!-- Toolbar -->
-        <v-toolbar extended style="background-color: #282654;">
-            <v-row class="align-center">
-                <!-- Left spacer -->
-                <v-col cols="1" class="d-none d-md-flex" style="background-color: #282654;"></v-col>
-
-                <!-- Toolbar content -->
-                <v-col cols="10" class="d-flex justify-center">
-                    <NuxtLink to="/home" class="d-flex align-center text-decoration-none">
-                        <v-icon class="text-white mr-4" size="x-large">mdi-movie-open</v-icon>
-                        <v-toolbar-title class="text-white">Nyarikimovies</v-toolbar-title>
-                    </NuxtLink>
-                </v-col>
-
-                <!-- Right spacer -->
-                <v-col cols="1" class="d-none d-md-flex" style="background-color: #282654;"></v-col>
-            </v-row>
-        </v-toolbar>
+        <v-app-bar extended elevation="1" color="#282654" class="px-2">
+            <v-container class="mx-auto px-0" :class="{ 'max-width-xl': $vuetify.display.lgAndUp }">
+                <v-row align="center" no-gutters>
+                    <v-col cols="12" class="d-flex justify-center justify-sm-start">
+                        <NuxtLink to="/home" class="d-flex align-center text-decoration-none">
+                            <v-icon color="white" class="mr-4" size="32">mdi-movie-open</v-icon>
+                            <v-app-bar-title class="text-white text-h6">Nyarikimovies</v-app-bar-title>
+                        </NuxtLink>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-app-bar>
 
         <!-- Main content -->
-        <v-container fluid class="pa-0">
-            <v-row>
-                <!-- Left spacer -->
-                <v-col cols="1" class="d-none d-md-flex" style="background-color: #282654;"></v-col>
-
-                <!-- Main content area -->
-                <v-col cols="10">
-                    <slot></slot>
-                </v-col>
-
-                <!-- Right spacer -->
-                <v-col cols="1" class="d-none d-md-flex" style="background-color: #282654;"></v-col>
-            </v-row>
-        </v-container>
+        <v-main>
+            <v-container class="mx-auto px-4" :class="{ 'max-width-xl': $vuetify.display.lgAndUp }">
+                <slot></slot>
+            </v-container>
+        </v-main>
     </div>
 </template>
 
 <script setup lang="ts">
-// No additional setup needed for auth layout
+// Add any additional setup logic here
 </script>
 
-<style>
-.v-toolbar {
-    padding: 0;
+<style scoped>
+.layout-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.v-toolbar-title {
-    font-size: 1.5rem;
+.max-width-xl {
+    max-width: 1440px !important;
 }
 
-.v-icon {
-    cursor: pointer;
+:deep(.v-toolbar-title) {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
 }
 </style>

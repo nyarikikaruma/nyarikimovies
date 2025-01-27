@@ -1,3 +1,8 @@
+export interface SearchResponse {
+    page: number;
+    results: Movie[];
+  }
+
 interface AuthorDetails {
     name: string;
     username: string;

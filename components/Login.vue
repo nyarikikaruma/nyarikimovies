@@ -1,31 +1,67 @@
 <template>
-    <div>
-        <v-card class="mx-auto pa-6" max-width="400">
-            <v-card-title class="text-center text-h5 mb-4">
-                Login
-            </v-card-title>
+    <div class="login-container">
+        <v-container class="fill-height">
+            <v-row justify="center" align="center">
+                <v-col cols="12" sm="8" md="6" lg="4">
+                    <v-card class="login-card elevation-8" rounded="lg">
+                        <v-card-item>
+                            <v-card-title class="text-center text-h5 mb-4">
+                                Login
+                            </v-card-title>
+                        </v-card-item>
 
-            <form @submit.prevent="handleLogin">
-                <v-text-field variant="solo-filled" v-model="form.email" :error-messages="errors.email" label="Email" type="email" required
-                    @input="clearError('email')"></v-text-field>
+                        <v-card-text>
+                            <form @submit.prevent="handleLogin">
+                                <v-text-field
+                                    v-model="form.email"
+                                    :error-messages="errors.email"
+                                    label="Email"
+                                    type="email"
+                                    variant="outlined"
+                                    density="comfortable"
+                                    bg-color="surface"
+                                    required
+                                    @input="clearError('email')"
+                                ></v-text-field>
 
-                <v-text-field variant="solo-filled" v-model="form.password" :error-messages="errors.password" label="Password" type="password"
-                    required @input="clearError('password')"></v-text-field>
+                                <v-text-field
+                                    v-model="form.password"
+                                    :error-messages="errors.password"
+                                    label="Password"
+                                    type="password"
+                                    variant="outlined"
+                                    density="comfortable"
+                                    bg-color="surface"
+                                    required
+                                    @input="clearError('password')"
+                                ></v-text-field>
 
-                <v-btn block color="primary" class="mt-4" type="submit" :loading="loading">
-                    Login
-                </v-btn>
+                                <v-btn
+                                    block
+                                    color="primary"
+                                    size="large"
+                                    type="submit"
+                                    :loading="loading"
+                                    class="mt-2"
+                                >
+                                    Login
+                                </v-btn>
 
-                <div class="text-center mt-4">
-                    Don't have an account?
-                    <NuxtLink to="/register" class="text-decoration-none">
-                        Register here
-                    </NuxtLink>
-                </div>
-            </form>
-        </v-card>
+                                <div class="text-center mt-6">
+                                    Don't have an account?
+                                    <NuxtLink to="/register" class="text-decoration-none ml-1">
+                                        Register here
+                                    </NuxtLink>
+                                </div>
+                            </form>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
     </div>
 </template>
+
 <script setup lang="ts">
 const auth = useAuthState()
 const loading = ref(false)
@@ -41,12 +77,9 @@ const errors = reactive({
 
 const validateForm = () => {
     let isValid = true
-
-    // Reset errors
     errors.email = ''
     errors.password = ''
 
-    // Email validation
     if (!form.email) {
         errors.email = 'Email is required'
         isValid = false
@@ -55,7 +88,6 @@ const validateForm = () => {
         isValid = false
     }
 
-    // Password validation
     if (!form.password) {
         errors.password = 'Password is required'
         isValid = false
@@ -67,7 +99,7 @@ const validateForm = () => {
     return isValid
 }
 
-const clearError = (field) => {
+const clearError = (field: keyof typeof errors) => {
     errors[field] = ''
 }
 
@@ -77,7 +109,6 @@ const handleLogin = async () => {
     try {
         loading.value = true
         const login = await auth.signIn(form.email, form.password)
-        console.log('login', login)
         if (login) {
             navigateTo('/home')
         }
@@ -88,3 +119,19 @@ const handleLogin = async () => {
     }
 }
 </script>
+
+<style scoped>
+.login-container {
+    min-height: 100vh;
+}
+
+.login-card {
+    padding: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .login-card {
+        padding: 1rem;
+    }
+}
+</style>
