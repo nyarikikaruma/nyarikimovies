@@ -11,6 +11,10 @@
                         </v-card-item>
 
                         <v-card-text>
+                            <v-alert v-if="loginError" type="error" variant="tonal" closable class="mb-4" @click:close="loginError = ''">
+                                {{ loginError }}
+                            </v-alert>
+
                             <form @submit.prevent="handleLogin">
                                 <v-text-field
                                     v-model="form.email"
@@ -21,7 +25,7 @@
                                     density="comfortable"
                                     bg-color="surface"
                                     required
-                                    @input="clearError('email')"
+                                    @input="clearErrors"
                                 ></v-text-field>
 
                                 <v-text-field
@@ -33,7 +37,7 @@
                                     density="comfortable"
                                     bg-color="surface"
                                     required
-                                    @input="clearError('password')"
+                                    @input="clearErrors"
                                 ></v-text-field>
 
                                 <v-btn
@@ -65,6 +69,8 @@
 <script setup lang="ts">
 const auth = useAuthState()
 const loading = ref(false)
+const loginError = ref('')
+
 const form = reactive({
     email: '',
     password: ''
@@ -99,8 +105,10 @@ const validateForm = () => {
     return isValid
 }
 
-const clearError = (field: keyof typeof errors) => {
-    errors[field] = ''
+const clearErrors = () => {
+    errors.email = ''
+    errors.password = ''
+    loginError.value = ''
 }
 
 const handleLogin = async () => {
@@ -108,12 +116,14 @@ const handleLogin = async () => {
 
     try {
         loading.value = true
+        loginError.value = ''
         const login = await auth.signIn(form.email, form.password)
         if (login) {
             navigateTo('/home')
         }
     } catch (error) {
         console.error('Login error:', error)
+        loginError.value = 'Invalid email or password. Please try again or register for a new account.'
     } finally {
         loading.value = false
     }

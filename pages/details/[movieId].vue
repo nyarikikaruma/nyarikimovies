@@ -1,6 +1,14 @@
 <template>
     <div v-if="loading">
-        <v-skeleton-loader class="mx-auto" elevation="2" max-width="700" type="card-avatar, article, actions"></v-skeleton-loader>
+        <v-row>
+                <v-col cols="12" md="12">
+                    <v-skeleton-loader class="mx-auto border" max-width="1200"
+                        type="image, article"></v-skeleton-loader>
+                </v-col>
+                <v-col cols="12" md="3" v-for="n in 12">
+                    <v-skeleton-loader class="mx-auto border" max-width="300" type="article, article"></v-skeleton-loader>
+                </v-col>
+            </v-row>
     </div>
     <div v-else>
             <DetailsCard v-if="movieReviews && moviesDetails" :relatedMovies="relatedMovies" :movieDetails = "moviesDetails" :movieReviews="movieReviews" />
