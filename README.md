@@ -2,6 +2,37 @@
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
+## Overview
+This project is a movie recommendation application built as part of the SIL Frontend Engineer Assessment. It fetches movie data from The Movie Database (TMDB) API and provides a user-friendly interface for browsing, searching, and viewing movie details.
+
+## Deployment
+The application is deployed using Vercel and can be accessed here: [nyarikimovies](https://nyarikimovies.vercel.app/)
+
+## Technologies Used
+Framework: Nuxt 3 with Vuetify for UI components.
+
+Authentication: Firebase for simple and efficient authentication.
+
+Data Fetching: The Movie Database (TMDB) API.
+
+Hosting & CI/CD: Vercel for automatic deployment and CI/CD.
+
+
+## Features
+Movie List: Displays a list of movies with basic information (title, poster, overview).
+
+Movie Details: Shows detailed information for a selected movie, including cast, crew, and ratings.
+
+Search Functionality: Allows users to search for movies by title or keyword.
+
+Loaders & Pagination: Added loaders for data fetching and pagination to optimize performance.
+
+## Design
+I created a Figma design to guide the implementation, though some adjustments were made during development to accommodate changes on the fly.
+
+## Areas for Improvement
+Due to time constraints, I was unable to implement unit tests and a more sophisticated CI/CD pipeline. However, I’ve leveraged Vercel’s automated deployment process to ensure the application is deployed seamlessly.
+
 ## Setup
 
 Make sure to install dependencies:
