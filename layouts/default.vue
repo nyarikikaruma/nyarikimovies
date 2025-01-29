@@ -15,7 +15,7 @@
                   </NuxtLink>
                 </v-col>
                 <v-col cols="auto" class="flex-grow-1"></v-col>
-                <v-col cols="auto" class="d-none d-sm-flex">
+                <v-col cols="auto" class="d-sm-flex">
                   <Search></Search>
                 </v-col>
                 <v-col cols="auto" class="d-flex align-center">

@@ -136,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MovieData } from "~/utils/moviesList";
+// import type { MovieData } from "~/utils/moviesList";
 const model = ref(null)
 const config = useRuntimeConfig();
 const token = config.public.tmdbToken;
@@ -155,120 +155,109 @@ onMounted(async () => {
 });
 
 async function goToNextPage(type: String, page: String) {
-    if(type == 'now_playing') {
-        try {
-        loadingPlaying.value = true
-        nowPlaying = await $fetch(
-            `https://api.themoviedb.org/3/movie/${type}?language=en-US&page=${page}`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        loadingPlaying.value = false
-    } catch (error) {
-        console.log('Error: ', error)
+    // Common options for all requests
+    const options = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        // Enable caching
+        cache: 'force-cache',
+        // Cache for 5 minutes (adjust as needed)
+        staleTime: 5 * 60 * 1000,
+        // Key to ensure unique caching per type and page
+        key: `movies-${type}-${page}`
+    };
 
-    }
-    } else if (type == 'popular') {
-        try {
-        loadingPopular.value = true
-        popularMovies = await $fetch(
-            `https://api.themoviedb.org/3/movie/${type}?language=en-US&page=${page}`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        loadingPopular.value = false
-    } catch (error) {
-        console.log('Error: ', error)
+    const url = `https://api.themoviedb.org/3/movie/${type}?language=en-US&page=${page}`;
 
-    }
-    } else if (type == 'top_rated') {
-        try {
-        loadingTopRated.value = true
-        topRated = await $fetch(
-            `https://api.themoviedb.org/3/movie/${type}?language=en-US&page=${page}`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        loadingTopRated.value = false
-    } catch (error) {
-        console.log('Error: ', error)
+    try {
+        // Set the appropriate loading state
+        if (type === 'now_playing') loadingPlaying.value = true;
+        else if (type === 'popular') loadingPopular.value = true;
+        else if (type === 'top_rated') loadingTopRated.value = true;
+        else if (type === 'upcoming') loadingUpcoming.value = true;
 
-    }
-} else if(type == 'upcoming') {
-        try {
-            loadingUpcoming.value = true
-            upcoming = await $fetch(
-                `https://api.themoviedb.org/3/movie/${type}?language=en-US&page=${page}`,
-                {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            loadingUpcoming.value = false
-        } catch (error) {
-            console.log('Error: ', error)
-    
+        // Make the cached request
+        const { data, error } = await useFetch(url, options);
+
+        if (error.value) {
+            throw error.value;
         }
 
+        // Update the appropriate data store
+        switch (type) {
+            case 'now_playing':
+                nowPlaying = data.value;
+                break;
+            case 'popular':
+                popularMovies = data.value;
+                break;
+            case 'top_rated':
+                topRated = data.value;
+                break;
+            case 'upcoming':
+                upcoming = data.value;
+                break;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    } finally {
+        // Reset loading states
+        if (type === 'now_playing') loadingPlaying.value = false;
+        else if (type === 'popular') loadingPopular.value = false;
+        else if (type === 'top_rated') loadingTopRated.value = false;
+        else if (type === 'upcoming') loadingUpcoming.value = false;
     }
 }
 async function getMovies() {
+    const options = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        // Enable caching
+        cache: 'force-cache',
+        // Cache for 5 minutes (adjust as needed)
+        staleTime: 5 * 60 * 1000,
+    };
+
     try {
-        loading.value = true
-        nowPlaying = await $fetch(
-            "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1",
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        popularMovies = await $fetch(
-            "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        topRated = await $fetch(
-            "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        upcoming = await $fetch(
-            "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        loading.value = false
+        loading.value = true;
+
+        // Make all requests concurrently with caching
+        const [
+            { data: nowPlayingData },
+            { data: popularData },
+            { data: topRatedData },
+            { data: upcomingData }
+        ] = await Promise.all([
+            useFetch(
+                "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1",
+                { ...options, key: 'movies-now-playing' }
+            ),
+            useFetch(
+                "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
+                { ...options, key: 'movies-popular' }
+            ),
+            useFetch(
+                "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
+                { ...options, key: 'movies-top-rated' }
+            ),
+            useFetch(
+                "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
+                { ...options, key: 'movies-upcoming' }
+            )
+        ]);
+
+        // Update the data stores
+        nowPlaying = nowPlayingData.value;
+        popularMovies = popularData.value;
+        topRated = topRatedData.value;
+        upcoming = upcomingData.value;
 
     } catch (error) {
-        console.log("error", error);
+        console.error("Error:", error);
+    } finally {
+        loading.value = false;
     }
 }
 
