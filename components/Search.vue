@@ -11,9 +11,8 @@
         single-line
         clearable
         @update:model-value="handleSearch"
-
         @click:clear="clearSearch"
-        class="mr-5"
+        class="mr-5 search-field"
       >
         <template v-slot:append>
           <v-progress-circular
@@ -99,7 +98,7 @@
   
   <script setup lang="ts">
   import { ref, watch } from 'vue'
-  import  debounce  from "lodash/debounce";
+  import debounce from "lodash/debounce";
   const config = useRuntimeConfig();
   const token = config.public.tmdbToken;
   
@@ -170,6 +169,20 @@
   .search-container {
     position: relative;
     width: 300px;
+  }
+  
+  /* Add these new styles for cursor visibility */
+  :deep(.search-field) {
+    .v-field__input {
+      caret-color: currentColor !important;
+      cursor: text !important;
+    }
+  
+    .v-field--focused {
+      .v-field__outline {
+        --v-field-border-opacity: 1 !important;
+      }
+    }
   }
   
   .text-truncate-3 {
