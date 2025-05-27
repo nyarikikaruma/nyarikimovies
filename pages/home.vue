@@ -22,17 +22,16 @@
                             </h1>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-pagination :length="nowPlaying.total_pages" @update:model-value="(page) => goToNextPage('now_playing', page.toString())" :total-visible="5"></v-pagination>
+                            <v-pagination :length="nowPlaying.total_pages"
+                                @update:model-value="(page) => goToNextPage('now_playing', page.toString())"
+                                :total-visible="5"></v-pagination>
                         </v-col>
                     </v-row>
                     <v-sheet>
                         <v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" mandatory>
                             <template v-if="loadingPlaying">
-                                <v-slide-group-item v-for="n in 6" :key="n">
-                                    <div class="ma-2" width="200">
-                                        <v-skeleton-loader :loading="true" height="240" type="image, list-item-two-line" class="mx-2" width="300"></v-skeleton-loader>
-                                    </div>
-                                </v-slide-group-item>
+                                <SkeletonLoader/>
+
                             </template>
                             <v-slide-group-item v-else v-for="(movie, index) in nowPlaying?.results" :key="index"
                                 v-slot="{ isSelected, toggle }">
@@ -51,17 +50,15 @@
                             </h1>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-pagination :length="popularMovies?.total_pages" @update:model-value="(page) => goToNextPage('popular', page.toString())" :total-visible="5"></v-pagination>
+                            <v-pagination :length="popularMovies?.total_pages"
+                                @update:model-value="(page) => goToNextPage('popular', page.toString())"
+                                :total-visible="5"></v-pagination>
                         </v-col>
                     </v-row>
                     <v-sheet>
                         <v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" mandatory>
                             <template v-if="loadingPopular">
-                                <v-slide-group-item  v-for="n in 6" :key="n">
-                                    <div class="ma-2" width="200">
-                                        <v-skeleton-loader :loading="true" height="240" type="image, list-item-two-line" class="mx-2" width="300"></v-skeleton-loader>
-                                    </div>
-                                </v-slide-group-item>
+                                <SkeletonLoader/>
                             </template>
                             <v-slide-group-item v-else v-for="(movie, index) in popularMovies?.results" :key="index"
                                 v-slot="{ isSelected, toggle }">
@@ -80,17 +77,15 @@
                             </h1>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-pagination :length="topRated?.total_pages" @update:model-value="(page) => goToNextPage('top_rated', page.toString())" :total-visible="5"></v-pagination>
+                            <v-pagination :length="topRated?.total_pages"
+                                @update:model-value="(page) => goToNextPage('top_rated', page.toString())"
+                                :total-visible="5"></v-pagination>
                         </v-col>
                     </v-row>
                     <v-sheet>
                         <v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" mandatory>
                             <template v-if="loadingTopRated">
-                                <v-slide-group-item v-for="n in 6" :key="n">
-                                    <div class="ma-2" width="200">
-                                        <v-skeleton-loader :loading="true" height="240" type="image, list-item-two-line" class="mx-2" width="300"></v-skeleton-loader>
-                                    </div>
-                                </v-slide-group-item>
+                                <SkeletonLoader/>
                             </template>
                             <v-slide-group-item v-else v-for="(movie, index) in topRated?.results" :key="index"
                                 v-slot="{ isSelected, toggle }">
@@ -109,17 +104,16 @@
                             </h1>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-pagination :length="upcoming?.total_pages" @update:model-value="(page) => goToNextPage('upcoming', page.toString())" :total-visible="5"></v-pagination>
+                            <v-pagination :length="upcoming?.total_pages"
+                                @update:model-value="(page) => goToNextPage('upcoming', page.toString())"
+                                :total-visible="5"></v-pagination>
                         </v-col>
                     </v-row>
                     <v-sheet>
                         <v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" mandatory>
                             <template v-if="loadingUpcoming">
-                                <v-slide-group-item v-for="n in 6" :key="n">
-                                    <div class="ma-2" width="200">
-                                        <v-skeleton-loader :loading="true" height="240" type="image, list-item-two-line" class="mx-2" width="300"></v-skeleton-loader>
-                                    </div>
-                                </v-slide-group-item>
+                                <SkeletonLoader/>
+
                             </template>
                             <v-slide-group-item v-else v-for="(movie, index) in upcoming?.results" :key="index"
                                 v-slot="{ isSelected, toggle }">
@@ -136,7 +130,8 @@
 </template>
 
 <script setup lang="ts">
-// import type { MovieData } from "~/utils/moviesList";
+import SkeletonLoader from '~/components/SkeletonLoader.vue';
+
 const model = ref(null)
 const config = useRuntimeConfig();
 const token = config.public.tmdbToken;
