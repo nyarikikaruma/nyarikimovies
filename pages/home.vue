@@ -135,7 +135,7 @@ import SkeletonLoader from '~/components/SkeletonLoader.vue';
 const model = ref(null)
 const config = useRuntimeConfig();
 const token = config.public.tmdbToken;
-var nowPlaying = ref<MovieData>();
+var nowPlaying = ref<MovieData | null>(null);
 var popularMovies = ref<MovieData>();
 var topRated = ref<MovieData>();
 var upcoming = ref<MovieData>();
@@ -205,57 +205,78 @@ async function goToNextPage(type: String, page: String) {
     }
 }
 async function getMovies() {
-    const options = {
+    const baseOptions = {
         headers: {
             Authorization: `Bearer ${token}`
         },
-        // Enable caching
-        cache: 'force-cache',
-        // Cache for 5 minutes (adjust as needed)
+        cache: 'force-cache' as const,
         staleTime: 5 * 60 * 1000,
     };
+
+    // Define movie endpoints with their corresponding keys and data stores
+    const movieEndpoints = [
+        {
+            endpoint: 'now_playing',
+            key: 'movies-now-playing',
+            dataStore: () => nowPlaying = data.value
+        },
+        {
+            endpoint: 'popular', 
+            key: 'movies-popular',
+            dataStore: () => popularMovies = data.value
+        },
+        {
+            endpoint: 'top_rated',
+            key: 'movies-top-rated', 
+            dataStore: () => topRated = data.value
+        },
+        {
+            endpoint: 'upcoming',
+            key: 'movies-upcoming',
+            dataStore: () => upcoming = data.value
+        }
+    ] as const;
 
     try {
         loading.value = true;
 
-        // Make all requests concurrently with caching
-        const [
-            { data: nowPlayingData },
-            { data: popularData },
-            { data: topRatedData },
-            { data: upcomingData }
-        ] = await Promise.all([
+        // Create fetch promises dynamically
+        const fetchPromises = movieEndpoints.map(({ endpoint, key }) =>
             useFetch(
-                "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1",
-                { ...options, key: 'movies-now-playing' }
-            ),
-            useFetch(
-                "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
-                { ...options, key: 'movies-popular' }
-            ),
-            useFetch(
-                "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
-                { ...options, key: 'movies-top-rated' }
-            ),
-            useFetch(
-                "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
-                { ...options, key: 'movies-upcoming' }
+                `https://api.themoviedb.org/3/movie/${endpoint}?language=en-US&page=1`,
+                { ...baseOptions, key }
             )
-        ]);
+        );
 
-        // Update the data stores
-        nowPlaying = nowPlayingData.value;
-        popularMovies = popularData.value;
-        topRated = topRatedData.value;
-        upcoming = upcomingData.value;
+        // Execute all requests concurrently
+        const responses = await Promise.all(fetchPromises);
+
+        // Update data stores using the responses
+        responses.forEach(({ data }, index) => {
+            const endpoint = movieEndpoints[index];
+            // Direct assignment based on endpoint
+            switch (endpoint.endpoint) {
+                case 'now_playing':
+                    nowPlaying = data.value;
+                    break;
+                case 'popular':
+                    popularMovies = data.value; 
+                    break;
+                case 'top_rated':
+                    topRated = data.value;
+                    break;
+                case 'upcoming':
+                    upcoming = data.value;
+                    break;
+            }
+        });
 
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error fetching movies:", error);
     } finally {
         loading.value = false;
     }
 }
-
 
 </script>
 
