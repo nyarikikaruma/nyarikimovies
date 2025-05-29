@@ -17,7 +17,7 @@
                 <div>
                     <v-row align="center" justify="center">
                         <v-col cols="12" md="6">
-                            <h1 style="color: #282654" class="text-h4 font-weight-bold mt-4">
+                            <h1 style="color: #282654" class="text-h4 font-weight-bold mt-4 ml-12">
                                 Now Playing
                             </h1>
                         </v-col>
@@ -136,9 +136,9 @@ const model = ref(null)
 const config = useRuntimeConfig();
 const token = config.public.tmdbToken;
 var nowPlaying = ref<MovieData | null>(null);
-var popularMovies = ref<MovieData>();
-var topRated = ref<MovieData>();
-var upcoming = ref<MovieData>();
+var popularMovies = ref<MovieData | null>(null);
+var topRated = ref<MovieData | null>(null);
+var upcoming = ref<MovieData | null>(null);
 const loading = ref<Boolean>(false)
 const loadingPlaying = ref<Boolean>(false)
 const loadingPopular = ref<Boolean>(false)
@@ -173,7 +173,7 @@ async function goToNextPage(type: String, page: String) {
         else if (type === 'upcoming') loadingUpcoming.value = true;
 
         // Make the cached request
-        const { data, error } = await useFetch(url, options);
+        const { data, error } = await useFetch<MovieData | null>(url, options);
 
         if (error.value) {
             throw error.value;
@@ -182,7 +182,7 @@ async function goToNextPage(type: String, page: String) {
         // Update the appropriate data store
         switch (type) {
             case 'now_playing':
-                nowPlaying = data.value;
+                nowPlaying.value = data.value;
                 break;
             case 'popular':
                 popularMovies = data.value;
@@ -218,22 +218,18 @@ async function getMovies() {
         {
             endpoint: 'now_playing',
             key: 'movies-now-playing',
-            dataStore: () => nowPlaying = data.value
         },
         {
             endpoint: 'popular', 
             key: 'movies-popular',
-            dataStore: () => popularMovies = data.value
         },
         {
             endpoint: 'top_rated',
             key: 'movies-top-rated', 
-            dataStore: () => topRated = data.value
         },
         {
             endpoint: 'upcoming',
             key: 'movies-upcoming',
-            dataStore: () => upcoming = data.value
         }
     ] as const;
 
@@ -242,7 +238,7 @@ async function getMovies() {
 
         // Create fetch promises dynamically
         const fetchPromises = movieEndpoints.map(({ endpoint, key }) =>
-            useFetch(
+            useFetch<MovieData | null>(
                 `https://api.themoviedb.org/3/movie/${endpoint}?language=en-US&page=1`,
                 { ...baseOptions, key }
             )
@@ -257,16 +253,16 @@ async function getMovies() {
             // Direct assignment based on endpoint
             switch (endpoint.endpoint) {
                 case 'now_playing':
-                    nowPlaying = data.value;
+                    nowPlaying.value = data.value;
                     break;
                 case 'popular':
-                    popularMovies = data.value; 
+                    popularMovies.value = data.value; 
                     break;
                 case 'top_rated':
-                    topRated = data.value;
+                    topRated.value = data.value;
                     break;
                 case 'upcoming':
-                    upcoming = data.value;
+                    upcoming.value = data.value;
                     break;
             }
         });
