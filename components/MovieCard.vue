@@ -1,11 +1,11 @@
 <template>
-    <v-card width="280" class="d-flex flex-column" :to="`/details/${movie.id}/`" hover elevation="2">
+    <v-card width="280" class="d-flex flex-column" :to="`/details/${movie.id}/`" hover elevation="2" cl>
         <v-img 
             :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" 
             :aspect-ratio="2 / 3" 
-            cover
             class="align-end"
-            height="420"
+            max-height="200"
+            cover
         >
             <v-chip 
                 color="rgba(0,0,0,0.8)" 
