@@ -17,22 +17,21 @@
                 <div>
                     <v-row align="center" justify="center">
                         <v-col cols="12" md="6">
-                            <h1 style="color: #282654" class="text-h4 font-weight-bold mt-4">
+                            <h1 style="color: #282654" class="text-h4 font-weight-bold mt-4 ml-12">
                                 Now Playing
                             </h1>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-pagination :length="nowPlaying.total_pages" @update:model-value="(page) => goToNextPage('now_playing', page.toString())" :total-visible="5"></v-pagination>
+                            <v-pagination :length="nowPlaying.total_pages"
+                                @update:model-value="(page) => goToNextPage('now_playing', page.toString())"
+                                :total-visible="5"></v-pagination>
                         </v-col>
                     </v-row>
                     <v-sheet>
                         <v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" mandatory>
                             <template v-if="loadingPlaying">
-                                <v-slide-group-item v-for="n in 6" :key="n">
-                                    <div class="ma-2" width="200">
-                                        <v-skeleton-loader :loading="true" height="240" type="image, list-item-two-line" class="mx-2" width="300"></v-skeleton-loader>
-                                    </div>
-                                </v-slide-group-item>
+                                <SkeletonLoader/>
+
                             </template>
                             <v-slide-group-item v-else v-for="(movie, index) in nowPlaying?.results" :key="index"
                                 v-slot="{ isSelected, toggle }">
@@ -51,17 +50,15 @@
                             </h1>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-pagination :length="popularMovies?.total_pages" @update:model-value="(page) => goToNextPage('popular', page.toString())" :total-visible="5"></v-pagination>
+                            <v-pagination :length="popularMovies?.total_pages"
+                                @update:model-value="(page) => goToNextPage('popular', page.toString())"
+                                :total-visible="5"></v-pagination>
                         </v-col>
                     </v-row>
                     <v-sheet>
                         <v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" mandatory>
                             <template v-if="loadingPopular">
-                                <v-slide-group-item  v-for="n in 6" :key="n">
-                                    <div class="ma-2" width="200">
-                                        <v-skeleton-loader :loading="true" height="240" type="image, list-item-two-line" class="mx-2" width="300"></v-skeleton-loader>
-                                    </div>
-                                </v-slide-group-item>
+                                <SkeletonLoader/>
                             </template>
                             <v-slide-group-item v-else v-for="(movie, index) in popularMovies?.results" :key="index"
                                 v-slot="{ isSelected, toggle }">
@@ -80,17 +77,15 @@
                             </h1>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-pagination :length="topRated?.total_pages" @update:model-value="(page) => goToNextPage('top_rated', page.toString())" :total-visible="5"></v-pagination>
+                            <v-pagination :length="topRated?.total_pages"
+                                @update:model-value="(page) => goToNextPage('top_rated', page.toString())"
+                                :total-visible="5"></v-pagination>
                         </v-col>
                     </v-row>
                     <v-sheet>
                         <v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" mandatory>
                             <template v-if="loadingTopRated">
-                                <v-slide-group-item v-for="n in 6" :key="n">
-                                    <div class="ma-2" width="200">
-                                        <v-skeleton-loader :loading="true" height="240" type="image, list-item-two-line" class="mx-2" width="300"></v-skeleton-loader>
-                                    </div>
-                                </v-slide-group-item>
+                                <SkeletonLoader/>
                             </template>
                             <v-slide-group-item v-else v-for="(movie, index) in topRated?.results" :key="index"
                                 v-slot="{ isSelected, toggle }">
@@ -109,17 +104,16 @@
                             </h1>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-pagination :length="upcoming?.total_pages" @update:model-value="(page) => goToNextPage('upcoming', page.toString())" :total-visible="5"></v-pagination>
+                            <v-pagination :length="upcoming?.total_pages"
+                                @update:model-value="(page) => goToNextPage('upcoming', page.toString())"
+                                :total-visible="5"></v-pagination>
                         </v-col>
                     </v-row>
                     <v-sheet>
                         <v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" mandatory>
                             <template v-if="loadingUpcoming">
-                                <v-slide-group-item v-for="n in 6" :key="n">
-                                    <div class="ma-2" width="200">
-                                        <v-skeleton-loader :loading="true" height="240" type="image, list-item-two-line" class="mx-2" width="300"></v-skeleton-loader>
-                                    </div>
-                                </v-slide-group-item>
+                                <SkeletonLoader/>
+
                             </template>
                             <v-slide-group-item v-else v-for="(movie, index) in upcoming?.results" :key="index"
                                 v-slot="{ isSelected, toggle }">
@@ -136,14 +130,15 @@
 </template>
 
 <script setup lang="ts">
-// import type { MovieData } from "~/utils/moviesList";
+import SkeletonLoader from '~/components/SkeletonLoader.vue';
+
 const model = ref(null)
 const config = useRuntimeConfig();
 const token = config.public.tmdbToken;
-var nowPlaying = ref<MovieData>();
-var popularMovies = ref<MovieData>();
-var topRated = ref<MovieData>();
-var upcoming = ref<MovieData>();
+var nowPlaying = ref<MovieData | null>(null);
+var popularMovies = ref<MovieData | null>(null);
+var topRated = ref<MovieData | null>(null);
+var upcoming = ref<MovieData | null>(null);
 const loading = ref<Boolean>(false)
 const loadingPlaying = ref<Boolean>(false)
 const loadingPopular = ref<Boolean>(false)
@@ -178,7 +173,7 @@ async function goToNextPage(type: String, page: String) {
         else if (type === 'upcoming') loadingUpcoming.value = true;
 
         // Make the cached request
-        const { data, error } = await useFetch(url, options);
+        const { data, error } = await useFetch<MovieData | null>(url, options);
 
         if (error.value) {
             throw error.value;
@@ -187,7 +182,7 @@ async function goToNextPage(type: String, page: String) {
         // Update the appropriate data store
         switch (type) {
             case 'now_playing':
-                nowPlaying = data.value;
+                nowPlaying.value = data.value;
                 break;
             case 'popular':
                 popularMovies = data.value;
@@ -210,57 +205,74 @@ async function goToNextPage(type: String, page: String) {
     }
 }
 async function getMovies() {
-    const options = {
+    const baseOptions = {
         headers: {
             Authorization: `Bearer ${token}`
         },
-        // Enable caching
-        cache: 'force-cache',
-        // Cache for 5 minutes (adjust as needed)
+        cache: 'force-cache' as const,
         staleTime: 5 * 60 * 1000,
     };
+
+    // Define movie endpoints with their corresponding keys and data stores
+    const movieEndpoints = [
+        {
+            endpoint: 'now_playing',
+            key: 'movies-now-playing',
+        },
+        {
+            endpoint: 'popular', 
+            key: 'movies-popular',
+        },
+        {
+            endpoint: 'top_rated',
+            key: 'movies-top-rated', 
+        },
+        {
+            endpoint: 'upcoming',
+            key: 'movies-upcoming',
+        }
+    ] as const;
 
     try {
         loading.value = true;
 
-        // Make all requests concurrently with caching
-        const [
-            { data: nowPlayingData },
-            { data: popularData },
-            { data: topRatedData },
-            { data: upcomingData }
-        ] = await Promise.all([
-            useFetch(
-                "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1",
-                { ...options, key: 'movies-now-playing' }
-            ),
-            useFetch(
-                "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
-                { ...options, key: 'movies-popular' }
-            ),
-            useFetch(
-                "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
-                { ...options, key: 'movies-top-rated' }
-            ),
-            useFetch(
-                "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
-                { ...options, key: 'movies-upcoming' }
+        // Create fetch promises dynamically
+        const fetchPromises = movieEndpoints.map(({ endpoint, key }) =>
+            useFetch<MovieData | null>(
+                `https://api.themoviedb.org/3/movie/${endpoint}?language=en-US&page=1`,
+                { ...baseOptions, key }
             )
-        ]);
+        );
 
-        // Update the data stores
-        nowPlaying = nowPlayingData.value;
-        popularMovies = popularData.value;
-        topRated = topRatedData.value;
-        upcoming = upcomingData.value;
+        // Execute all requests concurrently
+        const responses = await Promise.all(fetchPromises);
+
+        // Update data stores using the responses
+        responses.forEach(({ data }, index) => {
+            const endpoint = movieEndpoints[index];
+            // Direct assignment based on endpoint
+            switch (endpoint.endpoint) {
+                case 'now_playing':
+                    nowPlaying.value = data.value;
+                    break;
+                case 'popular':
+                    popularMovies.value = data.value; 
+                    break;
+                case 'top_rated':
+                    topRated.value = data.value;
+                    break;
+                case 'upcoming':
+                    upcoming.value = data.value;
+                    break;
+            }
+        });
 
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error fetching movies:", error);
     } finally {
         loading.value = false;
     }
 }
-
 
 </script>
 

@@ -1,9 +1,7 @@
 <template>
     <div>
-      <v-img :src="`https://image.tmdb.org/t/p/original/${mainMovie.poster_path}`" 
-             height="50vh" 
-             cover 
-             class="position-relative">
+        <v-parallax
+        class="position-relative" max-height="75vh" cover :src="`https://image.tmdb.org/t/p/original/${mainMovie.poster_path}`" >
         <!-- Gradient overlay using Vuetify classes -->
         <div class="bg-gradient-to-top from-black to-transparent position-absolute h-100 w-100"></div>
   
@@ -61,7 +59,7 @@
             </v-col>
           </v-row>
         </v-container>
-      </v-img>
+      </v-parallax>
     </div>
   </template>
   
